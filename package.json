@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://haechi-labs.github.io/metamask-test",
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
     "@metamask/onboarding": "^1.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
