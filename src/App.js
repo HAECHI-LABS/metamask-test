@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { useEffect, useState } from 'react';
-import { providers } from 'ethers';
+import { providers, utils } from 'ethers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [balance, setBalance] = useState(null);
+  const [txHash, setTxHash] = useState(null);
   
   async function detectLoggedIn() {
     try {
@@ -79,6 +80,21 @@ function App() {
       });
   }
 
+  async function sendEth() {
+    if (loggedIn === false) {
+      return;
+    }
+    const ethersProvider = new providers.Web3Provider(provider, 'any');
+    const signer = await ethersProvider.getSigner();
+
+    const transaction = await signer.sendTransaction({
+      to: await signer.getAddress(),
+      value: utils.parseEther("0.0001")
+    })
+    setTxHash(transaction.hash);
+  }
+  
+
   return (
     <div className="App">
       <header className="App-header">
@@ -99,6 +115,12 @@ function App() {
           {loggedIn && <span>accounts: {accounts.join(', ')}</span>}
           <br/>
           {loggedIn && <span>balance: {balance}</span>}
+          <br/>
+          {loggedIn && <button onClick={sendEth}> send eth </button>}
+          <br/>
+          {txHash && <span>Transaction Hash: {txHash}</span>}
+          <br/>
+          {txHash && <a href={`https://ropsten.etherscan.io/tx/${txHash}`}>Ropsten Link</a>}
           </p>}
         
       </header>
